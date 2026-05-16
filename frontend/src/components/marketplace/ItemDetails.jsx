@@ -7,11 +7,14 @@ const ItemDetails = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:4000/api/items/${id}`);
+        const { data } = await axios.get(`${API}/api/items/${id}`, {
+          withCredentials: true,
+        });
         setItem(data);
       } catch (error) {
         console.log(error);

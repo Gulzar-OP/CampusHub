@@ -166,6 +166,7 @@ export default function Register() {
   const [apiError, setApiError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate              = useNavigate()
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   const handleChange = (e) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
@@ -210,7 +211,7 @@ export default function Register() {
       fd.append('role',     form.role)
       fd.append('avatar',   avatar)          // file field — multer picks this up
 
-      await axios.post('http://localhost:4000/api/auth/register', fd, {
+      await axios.post(`${API}/api/auth/register`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
 

@@ -525,12 +525,13 @@ export default function Home() {
   const [showForm, setShowForm]     = useState(false);
   const [loading, setLoading]       = useState(false);
   const [searchQuery, setSearch]    = useState("");
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
   const navigate = useNavigate();
 
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("http://localhost:4000/api/items/items");
+      const { data } = await axios.get(`${API}/api/items/items`);
       setItems(data);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }

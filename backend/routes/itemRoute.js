@@ -9,14 +9,17 @@ const router = express.Router();
 router.post("/add", protect, upload.single("image"), addItem);
 router.get('/marketplace', protect, getMarketplaceItems);
 router.get('/items', getAllItems);
+
+router.get("/my-posts", protect, getMyPosts);
+
+router.get("/:id", protect, getItemById);
+
 router.put("/claim/:id", protect, claimItem);
 router.get('/claimed-posts', protect, getClaimedPosts);
-router.get('/:id', protect, getItemById);
 router.put('/items/:id', protect, updateItem);
 router.delete('/items/:id', protect, deleteItem);
 router.post('/items/:id/buy', protect, buyItem);
 router.post('/sell/:id', protect, sellItem);
-router.get('/my-posts', protect, getMyPosts);
 
 
 export default router;

@@ -395,11 +395,12 @@ export default function Navbar() {
   const [searchFocused, setSearchFocused] = useState(false);
   const profileRef = useRef(null);
   const location = useLocation();
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/auth/me", { credentials: "include" });
+        const res = await fetch(`${API}/api/auth/me`, { credentials: "include" });
         setIsLoggedIn(res.ok);
       } catch { setIsLoggedIn(false); }
     };

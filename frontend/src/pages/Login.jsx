@@ -191,7 +191,7 @@ function LoginPanel({ onOtpRequired }) {
     setLoading(true); setApiErr('')
     try {
       const { data } = await axios.post(
-        'http://localhost:4000/api/auth/login',
+        `${API}/api/auth/login`,
         form,
         { withCredentials: true }
       )
@@ -271,7 +271,7 @@ function OtpPanel({ email, onBack }) {
     setLoading(true); setApiErr('')
     try {
       await axios.post(
-        'http://localhost:4000/api/auth/verify-otp',
+        `${API}/api/auth/verify-otp`,
         { email, otp: code ?? otp },
         { withCredentials: true }
       )
@@ -350,6 +350,7 @@ function OtpPanel({ email, onBack }) {
 export default function Login() {
   // null = show login  |  "email@..." = show OTP
   const [otpEmail, setOtpEmail] = useState(null)
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   return (
     <div

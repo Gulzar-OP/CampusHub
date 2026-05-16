@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 export default function MyPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchMyPosts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/items/my-posts",
+          `${API}/api/items/my-posts`,
           { withCredentials: true }
         );
         setPosts(response.data);

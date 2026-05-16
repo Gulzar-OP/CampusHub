@@ -6,11 +6,12 @@ export default function DetailsPost() {
   const { id } = useParams();
   const [itemDetails, setItemDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/items/${id}`,
+        const response = await axios.get(`${API}/api/items/${id}`,
             {
           withCredentials: true,
         }
@@ -37,7 +38,7 @@ export default function DetailsPost() {
   const handleClaim = async () => {
     try {
         const response = await axios.put(
-        `http://localhost:4000/api/items/claim/${id}`,
+        `${API}/api/items/claim/${id}`,
         {},
         {
             withCredentials: true,

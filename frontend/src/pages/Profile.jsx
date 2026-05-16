@@ -124,11 +124,12 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("listings");
   // const [posts, setPosts] = useState([]);
+  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/auth/me", {
+        const response = await fetch(`${API}/api/auth/me`, {
           method: "GET",
           credentials: "include",
         });
