@@ -174,23 +174,21 @@ export const login = async (req, res) => {
         expiresIn: "1d",
       }
     );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
 
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-      })
-      .status(200)
-      .json({
-        success: true,
-        message: "Login successful",
-
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-        },
-      });
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
 
   } catch (error) {
 
