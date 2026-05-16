@@ -7,6 +7,7 @@ import {
   ShieldCheck, ArrowLeft, RotateCcw, KeyRound
 } from 'lucide-react'
 
+const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 /* ─────────────────────────────────────────────
    Shared primitives
 ───────────────────────────────────────────── */
@@ -142,7 +143,7 @@ function ResendTimer({ email }) {
   const resend = async () => {
     setBusy(true)
     try {
-      await axios.post('http://localhost:4000/api/auth/resend-otp', { email })
+      await axios.post(`${API}/api/auth/resend-otp`, { email })
       setSecs(30)
     } catch { /* silent */ } finally { setBusy(false) }
   }
@@ -350,7 +351,6 @@ function OtpPanel({ email, onBack }) {
 export default function Login() {
   // null = show login  |  "email@..." = show OTP
   const [otpEmail, setOtpEmail] = useState(null)
-  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   return (
     <div
