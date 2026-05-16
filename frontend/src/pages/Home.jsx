@@ -9,6 +9,8 @@ import {
   Filter, TrendingUp
 } from "lucide-react";
 import toast from "react-hot-toast";
+
+const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 /* ─────────────────────────────────────────────
    Constants & helpers
 ───────────────────────────────────────────── */
