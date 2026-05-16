@@ -190,27 +190,48 @@ function PostModal({ onClose, onSuccess }) {
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => { if (v && k !== "image") fd.append(k, v); });
-      if (form.image) fd.append("image", form.image);
-      await axios.post(`${API}/api/items/add`, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      toast.success("Item added successfully!");
-      onSuccess();
-      onClose();
-    } catch (err) {
-      toast.error("Failed to add item.");
-      console.error(err);
-    } finally {
-      setSubmitting(false);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setSubmitting(true);
+
+  try {
+    const fd = new FormData();
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (value && key !== "image") {
+        fd.append(key, value);
+      }
+    });
+
+    if (form.image) {
+      fd.append("image", form.image);
     }
-  };
+
+    const { data } = await axios.post(
+      `${API}/api/items/add`,
+      fd,
+      {
+        withCredentials: true,
+      }
+    );
+
+    toast.success(data.message || "Item added successfully!");
+
+    onSuccess?.();
+    onClose?.();
+
+  } catch (err) {
+    console.error(err);
+
+    toast.error(
+      err.response?.data?.message ||
+      "Failed to add item"
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const inputCls = "w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-50 transition-all duration-200";
 
@@ -527,7 +548,6 @@ export default function Home() {
   const [showForm, setShowForm]     = useState(false);
   const [loading, setLoading]       = useState(false);
   const [searchQuery, setSearch]    = useState("");
-  const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
   const navigate = useNavigate();
 
   const fetchItems = async () => {
