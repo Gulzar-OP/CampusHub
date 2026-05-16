@@ -6,7 +6,7 @@ import {
   Mail, Lock, Loader2, AlertCircle,
   ShieldCheck, ArrowLeft, RotateCcw, KeyRound
 } from 'lucide-react'
-
+import toast from "react-hot-toast";
 const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 /* ─────────────────────────────────────────────
    Shared primitives
@@ -145,6 +145,7 @@ function ResendTimer({ email }) {
     try {
       await axios.post(`${API}/api/auth/resend-otp`, { email })
       setSecs(30)
+      toast.success("OTP resent successfully!");
     } catch { /* silent */ } finally { setBusy(false) }
   }
 
@@ -199,6 +200,7 @@ function LoginPanel({ onOtpRequired }) {
       // ← unverified: slide to OTP view inside the same card
       if (data.requiresOTP) { onOtpRequired(data.email); return }
       // ← verified: cookie set by server, go home
+      toast.success('Login successful!')
       navigate('/')
     } catch (err) {
       setApiErr(err.response?.data?.message || 'Invalid credentials. Try again.')
@@ -276,6 +278,7 @@ function OtpPanel({ email, onBack }) {
         { email, otp: code ?? otp },
         { withCredentials: true }
       )
+      toast.success('OTP verified! Logging you in…')
       navigate('/')
     } catch (err) {
       setApiErr(err.response?.data?.message || 'Incorrect OTP. Please try again.')

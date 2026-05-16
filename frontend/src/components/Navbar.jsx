@@ -402,6 +402,7 @@ export default function Navbar() {
       try {
         const res = await fetch(`${API}/api/auth/me`, { credentials: "include" });
         setIsLoggedIn(res.ok);
+        console.log(isLoggedIn);
       } catch { setIsLoggedIn(false); }
     };
     checkAuth();

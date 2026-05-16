@@ -7,7 +7,7 @@ import {
   BookOpen, Hash, ChevronRight, ChevronLeft,
   Camera, CheckCircle2, AlertCircle, Loader2
 } from 'lucide-react'
-
+import toast from "react-hot-toast";
 /* ── Constants ── */
 const ROLES = ['student', 'faculty', 'staff']
 const YEARS = [1, 2, 3, 4, 5]
@@ -214,7 +214,7 @@ export default function Register() {
       await axios.post(`${API}/api/auth/register`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-
+      toast.success('Account created successfully! Please log in.')
       navigate('/login')
     } catch (err) {
       setApiError(err.response?.data?.message || 'Something went wrong. Please try again.')

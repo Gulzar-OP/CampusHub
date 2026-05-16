@@ -8,7 +8,7 @@ import {
   ShoppingCart, Sparkles, Upload, ChevronRight,
   Filter, TrendingUp
 } from "lucide-react";
-
+import toast from "react-hot-toast";
 /* ─────────────────────────────────────────────
    Constants & helpers
 ───────────────────────────────────────────── */
@@ -197,13 +197,15 @@ function PostModal({ onClose, onSuccess }) {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => { if (v && k !== "image") fd.append(k, v); });
       if (form.image) fd.append("image", form.image);
-      await axios.post("http://localhost:4000/api/items/add", fd, {
+      await axios.post(`${API}/api/items/add`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
+      toast.success("Item added successfully!");
       onSuccess();
       onClose();
     } catch (err) {
+      toast.error("Failed to add item.");
       console.error(err);
     } finally {
       setSubmitting(false);
