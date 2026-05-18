@@ -225,16 +225,32 @@ export const myProfile = async (req, res) => {
 };
 
 export const getUserById = async (req, res) => {
+
     const { id } = req.params;
+
+    console.log("Received ID:", id);
+
     try {
+
         const user = await Users.findById(id).select("-password");
+
+        console.log("Fetched User:", user);
+
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({
+                message: "User not found"
+            });
         }
+
         res.status(200).json(user);
+
     } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ message: "Internal server error" });
+
+        console.error("FULL ERROR:", error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 

@@ -211,9 +211,13 @@ export default function Register() {
       fd.append('role',     form.role)
       fd.append('avatar',   avatar)          // file field — multer picks this up
 
-      await axios.post(`${API}/api/auth/register`, fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      await axios.post(
+        `${API}/api/auth/register`,
+        fd,
+        {
+          withCredentials: true,
+        }
+      );
       toast.success('Account created successfully! Please log in.')
       navigate('/login')
     } catch (err) {
@@ -265,7 +269,7 @@ export default function Register() {
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm font-bold"
             style={{ background: 'linear-gradient(135deg, #0d9488, #0f766e)' }}
-          >C</div>
+          ><img src="CampusHub_logo.png" alt="CampusHub Logo" /></div>
           <span className="font-semibold text-gray-800 text-sm">CampusHub</span>
         </div>
 
