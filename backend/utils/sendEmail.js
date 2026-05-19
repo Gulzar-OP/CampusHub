@@ -2,26 +2,28 @@ import nodemailer from "nodemailer";
 
 const sendEmail = async (to, subject, html) => {
   try {
-    // transporter create
+
+    console.log("EMAIL_USER:", process.env.EMAIL_USER);
+    console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "FOUND" : "NOT FOUND");
+
     const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      
-    });
-    transporter.verify((error, success) => {
-    if (error) {
-      console.log("SMTP ERROR:", error);
-    } else {
-      console.log("SMTP READY");
-    }
+      debug: true,
+      logger: true,
     });
 
-    // mail send
+    console.log("VERIFYING SMTP...");
+
+    await transporter.verify();
+
+    console.log("SMTP READY");
+
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to,
@@ -29,10 +31,11 @@ const sendEmail = async (to, subject, html) => {
       html,
     });
 
-    console.log("Email sent:", info.response);
+    console.log("EMAIL SENT:", info);
 
   } catch (error) {
-    console.log("Email error:", error);
+    console.log("FULL EMAIL ERROR:");
+    console.log(error);
   }
 };
 
