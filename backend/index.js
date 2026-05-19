@@ -9,7 +9,7 @@ import itemRoutes from './routes/itemRoute.js'
 import connectDB from './utils/db.js'
 
 const app = express()
-const allowedOrigins = ['http://localhost:5173','https://campus-hub-lovat.vercel.app', process.env.FRONTEND_URL]
+const allowedOrigins = ['http://localhost:5173','https://campus-hub-lovat.vercel.app','https://campus-hub-beta-plum.vercel.app', process.env.FRONTEND_URL]
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
