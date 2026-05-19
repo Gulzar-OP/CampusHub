@@ -247,7 +247,10 @@ export default function Profile() {
                     </div>
                   </div>
                   <span className="text-[11px] px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 font-semibold border border-teal-100">
-                    {u.isVerified ? "✅ Verified Student" : "🎓 Student"}
+                    {u.isVerified ? "Verified Student Email " : "🎓 Student"}
+                  </span>
+                  <span className="text-[11px] px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 font-semibold border border-teal-100">
+                    {u.collegeIdPic ? "Verified Student ID " : "🎓 Student"}
                   </span>
                 </div>
               </div>

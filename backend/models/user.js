@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    collegeId:{
+      type:String,
+      required: true,
+      trim: true,
+    },
     name: {
       type: String,
       required: true,
@@ -57,7 +62,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    collegeIdPic: {
+      type: String,
+      default: "",
+    },
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,

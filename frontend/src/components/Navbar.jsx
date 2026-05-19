@@ -113,7 +113,7 @@ export default function Navbar() {
                 </div>
               </motion.div>
 
-              <div className="hidden sm:block">
+              <div className="">
                 <h1 className="text-[17px] font-bold tracking-tight leading-none text-slate-900">
                   Campus<span className="text-teal-600">Hub</span>
                 </h1>

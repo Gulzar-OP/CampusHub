@@ -4,7 +4,14 @@ import { protect } from '../middlewares/authMiddleware.js';
 import upload from '../utils/multer.js';
 
 const router = express.Router();
-router.post('/register',upload.single('avatar'), register);
+router.post(
+  '/register',
+  upload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'image', maxCount: 1 },
+  ]),
+  register
+)
 router.post('/login', login);
 router.post("/verify-otp", verifyOTP);
 router.post('/logout', logout);
