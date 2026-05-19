@@ -2,150 +2,38 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Menu, X, Search, ShoppingBag, Bell, UserCircle,
-  ChevronDown, Sparkles,
+  Menu,
+  X,
+  Search,
+  ShoppingBag,
+  Bell,
+  UserCircle,
+  ChevronDown,
+  Sparkles,
 } from "lucide-react";
 import ProfileDropdown from "./ProfileDropdown";
 
-/* ─── Styles ─────────────────────────────────────────────────────── */
-const GlobalStyles = () => (
-  <style>{`
-    :root { --nav-h: 68px; }
-
-    .nav-link-pill {
-      position: relative;
-      font-size: 13.5px; font-weight: 500;
-      letter-spacing: 0.01em;
-      padding: 7px 14px; border-radius: 100px;
-      transition: all 0.2s ease; color: #5a6470;
-    }
-    .nav-link-pill:hover { color: #0f766e; background: rgba(13,148,136,0.07); }
-    .nav-link-pill.active { color: #0f766e; background: rgba(13,148,136,0.1); font-weight: 600; }
-    .nav-link-pill.active::after {
-      content: ''; position: absolute;
-      bottom: 4px; left: 50%; transform: translateX(-50%);
-      width: 4px; height: 4px; border-radius: 50%; background: #0d9488;
-    }
-
-    .icon-btn {
-      position: relative; width: 42px; height: 42px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(248,250,252,0.9); border: 1px solid rgba(0,0,0,0.06);
-      color: #4b5563; cursor: pointer; transition: all 0.18s ease;
-    }
-    .icon-btn:hover {
-      background: rgba(13,148,136,0.08); border-color: rgba(13,148,136,0.2);
-      color: #0d9488; transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(13,148,136,0.12);
-    }
-
-    .search-bar {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(248,250,252,0.95); border: 1.5px solid rgba(0,0,0,0.07);
-      border-radius: 14px; padding: 0 16px; height: 42px; width: 240px;
-      transition: all 0.25s ease;
-    }
-    .search-bar:focus-within {
-      width: 280px; border-color: rgba(13,148,136,0.35);
-      background: white; box-shadow: 0 0 0 4px rgba(13,148,136,0.07);
-    }
-    .search-bar input {
-      background: transparent; border: none; outline: none;
-      font-size: 13px; color: #374151; width: 100%;
-    }
-    .search-bar input::placeholder { color: #9ca3af; }
-
-    .profile-btn {
-      display: flex; align-items: center; gap: 8px;
-      height: 42px; padding: 0 14px 0 6px; border-radius: 14px;
-      background: rgba(248,250,252,0.9); border: 1.5px solid rgba(0,0,0,0.07);
-      cursor: pointer; transition: all 0.2s ease;
-    }
-    .profile-btn:hover, .profile-btn.open {
-      background: rgba(13,148,136,0.07); border-color: rgba(13,148,136,0.25);
-      box-shadow: 0 4px 16px rgba(13,148,136,0.1);
-    }
-    .profile-avatar {
-      width: 30px; height: 30px; border-radius: 10px;
-      background: linear-gradient(135deg, #0d9488, #0f766e);
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .dropdown-card {
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
-      border: 1px solid rgba(255,255,255,0.7); border-radius: 20px;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.13), 0 8px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
-      overflow: hidden;
-    }
-
-    .dropdown-header {
-      padding: 20px;
-      background: linear-gradient(145deg, #0f766e 0%, #115e59 50%, #0c4a46 100%);
-      position: relative; overflow: hidden;
-    }
-    .dropdown-header::before {
-      content: ''; position: absolute; top: -30px; right: -30px;
-      width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.08);
-    }
-    .dropdown-header::after {
-      content: ''; position: absolute; bottom: -20px; left: -20px;
-      width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.05);
-    }
-
-    .stat-pill { display: flex; flex-direction: column; align-items: center; padding: 10px 0; flex: 1; }
-    .stat-pill + .stat-pill { border-left: 1px solid rgba(0,0,0,0.05); }
-    .stat-value { font-size: 17px; font-weight: 700; color: #111827; }
-    .stat-label { font-size: 10px; font-weight: 500; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
-
-    .menu-item {
-      display: flex; align-items: center; gap: 11px;
-      padding: 9px 10px; border-radius: 12px;
-      font-size: 13.5px; font-weight: 500;
-      color: #374151; cursor: pointer; transition: all 0.15s ease; text-decoration: none;
-    }
-    .menu-item:hover { background: rgba(0,0,0,0.035); }
-    .menu-item-icon {
-      width: 32px; height: 32px; border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: all 0.15s ease;
-    }
-
-    .navbar-scrolled { box-shadow: 0 2px 32px rgba(0,0,0,0.08); background: rgba(255,255,255,0.95) !important; }
-
-    .badge {
-      position: absolute; top: -4px; right: -4px;
-      min-width: 18px; height: 18px; border-radius: 100px;
-      background: #ef4444; border: 2px solid white; color: white;
-      font-size: 9px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; padding: 0 3px;
-    }
-
-    .mobile-nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 13px 16px; border-radius: 14px;
-      background: rgba(248,250,252,0.9); border: 1px solid rgba(0,0,0,0.05);
-      font-size: 14px; font-weight: 500;
-      color: #374151; text-decoration: none; transition: all 0.18s ease;
-    }
-    .mobile-nav-item:hover, .mobile-nav-item.active {
-      background: rgba(13,148,136,0.07); border-color: rgba(13,148,136,0.2); color: #0f766e;
-    }
-  `}</style>
-);
-
-/* ─── Nav Link ───────────────────────────────────────────────────── */
 const NavLink = ({ to, children }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
+
   return (
-    <Link to={to} className={`nav-link-pill ${isActive ? "active" : ""}`}>
+    <Link
+      to={to}
+      className={`relative px-3.5 py-1.5 rounded-full text-[13.5px] font-medium tracking-[0.01em] transition-all duration-200 ${
+        isActive
+          ? "text-teal-700 bg-teal-500/10 font-semibold"
+          : "text-slate-500 hover:text-teal-700 hover:bg-teal-500/5"
+      }`}
+    >
       {children}
+      {isActive && (
+        <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-teal-500" />
+      )}
     </Link>
   );
 };
 
-/* ─── Navbar ─────────────────────────────────────────────────────── */
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -173,7 +61,7 @@ export default function Navbar() {
       }
     };
     checkAuth();
-  }, []);
+  }, [API]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -183,87 +71,112 @@ export default function Navbar() {
 
   useEffect(() => {
     const handler = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target))
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
         setShowProfile(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  useEffect(() => { setIsOpen(false); }, [location]);
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
   const navLinks = [
-    { to: "/",            label: "Home"        },
+    { to: "/", label: "Home" },
     { to: "/marketplace", label: "Marketplace" },
-    { to: "/about",       label: "About"       },
-    { to: "/my-posts",    label: "My Posts"    },
+    { to: "/about", label: "About" },
   ];
 
   return (
     <>
-      <GlobalStyles />
       <motion.nav
-        className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "navbar-scrolled" : ""}`}
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled ? "shadow-[0_2px_32px_rgba(0,0,0,0.08)] border-b border-black/5" : "border-b border-white/40"
+        }`}
         style={{
           background: scrolled ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0.82)",
-          backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-          borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(255,255,255,0.4)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between" style={{ height: 68 }}>
-
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 shrink-0" style={{ textDecoration: "none" }}>
-              <motion.div whileHover={{ scale: 1.05, rotate: -3 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                <div className="w-10 h-10 rounded-[13px] flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #0d9488, #0f766e)", boxShadow: "0 4px 16px rgba(13,148,136,0.3)" }}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-[68px] items-center justify-between">
+            <Link to="/" className="flex shrink-0 items-center gap-3 no-underline">
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-gradient-to-br from-teal-500 to-teal-700 shadow-[0_4px_16px_rgba(13,148,136,0.3)]">
                   <Sparkles size={20} color="white" />
                 </div>
               </motion.div>
+
               <div className="hidden sm:block">
-                <h1 className="text-[17px] font-bold tracking-tight leading-none" style={{ color: "#111827" }}>
-                  Campus<span style={{ color: "#0d9488" }}>Hub</span>
+                <h1 className="text-[17px] font-bold tracking-tight leading-none text-slate-900">
+                  Campus<span className="text-teal-600">Hub</span>
                 </h1>
-                <p className="text-[11px] font-medium mt-0.5" style={{ color: "#9ca3af" }}>
+                <p className="mt-0.5 text-[11px] font-medium text-slate-400">
                   Student marketplace
                 </p>
               </div>
             </Link>
 
-            {/* Desktop nav pills */}
-            <div className="hidden md:flex items-center gap-0.5"
-              style={{ background: "rgba(248,250,252,0.8)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 16, padding: "4px" }}>
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center gap-0.5 rounded-2xl border border-black/5 bg-slate-50/80 p-1">
               {navLinks.map(({ to, label }) => (
-                <NavLink key={to} to={to}>{label}</NavLink>
+                <NavLink key={to} to={to}>
+                  {label}
+                </NavLink>
               ))}
+              {isLoggedIn && (
+                <NavLink to="/my-posts">My Posts</NavLink>
+              )}
             </div>
 
-            {/* Right actions */}
             <div className="hidden md:flex items-center gap-2">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="icon-btn">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[14px] border border-black/5 bg-slate-50/90 text-slate-600 transition-all hover:-translate-y-px hover:border-teal-500/20 hover:bg-teal-500/10 hover:text-teal-600 hover:shadow-[0_4px_12px_rgba(13,148,136,0.12)]"
+              >
                 <Bell size={18} strokeWidth={2} />
-                <span className="badge">2</span>
+                <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-red-500 px-1 text-[9px] font-bold text-white">
+                  2
+                </span>
               </motion.button>
 
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="icon-btn">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex h-[42px] w-[42px] items-center justify-center rounded-[14px] border border-black/5 bg-slate-50/90 text-slate-600 transition-all hover:-translate-y-px hover:border-teal-500/20 hover:bg-teal-500/10 hover:text-teal-600 hover:shadow-[0_4px_12px_rgba(13,148,136,0.12)]"
+              >
                 <ShoppingBag size={18} strokeWidth={2} />
               </motion.button>
 
               {isLoggedIn ? (
                 <div className="relative" ref={profileRef}>
                   <motion.button
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => setShowProfile((p) => !p)}
-                    className={`profile-btn ${showProfile ? "open" : ""}`}
+                    className={`flex h-[42px] items-center gap-2 rounded-[14px] border px-[14px] pl-1.5 transition-all ${
+                      showProfile
+                        ? "border-teal-500/25 bg-teal-500/10 shadow-[0_4px_16px_rgba(13,148,136,0.1)]"
+                        : "border-black/5 bg-slate-50/90"
+                    }`}
                   >
-                    <div className="profile-avatar">
+                    <div className="flex h-[30px] w-[30px] items-center justify-center rounded-[10px] bg-gradient-to-br from-teal-500 to-teal-700">
                       <UserCircle size={17} color="white" />
                     </div>
-                    <span className="hidden lg:inline text-[13.5px] font-semibold" style={{ color: "#374151" }}>
+                    <span className="hidden lg:inline text-[13.5px] font-semibold text-slate-700">
                       {user?.name?.split(" ")[0] || "Profile"}
                     </span>
-                    <motion.span animate={{ rotate: showProfile ? 180 : 0 }} transition={{ duration: 0.22 }}>
+                    <motion.span
+                      animate={{ rotate: showProfile ? 180 : 0 }}
+                      transition={{ duration: 0.22 }}
+                    >
                       <ChevronDown size={13} color="#9ca3af" />
                     </motion.span>
                   </motion.button>
@@ -281,109 +194,146 @@ export default function Navbar() {
                 </div>
               ) : (
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Link to="/login"
-                    className="flex items-center gap-1.5 text-[13.5px] font-semibold text-white no-underline"
-                    style={{
-                      height: 42, padding: "0 18px", borderRadius: 12,
-                      background: "linear-gradient(135deg, #0d9488, #0f766e)",
-                      boxShadow: "0 4px 16px rgba(13,148,136,0.3)",
-                    }}>
+                  <Link
+                    to="/login"
+                    className="flex h-[42px] items-center gap-1.5 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 px-[18px] text-[13.5px] font-semibold text-white no-underline shadow-[0_4px_16px_rgba(13,148,136,0.3)]"
+                  >
                     Sign in
                   </Link>
                 </motion.div>
               )}
             </div>
 
-            {/* Hamburger */}
-            <motion.button whileTap={{ scale: 0.9 }} className="md:hidden icon-btn"
-              onClick={() => setIsOpen((p) => !p)}>
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              className="md:hidden flex h-[42px] w-[42px] items-center justify-center rounded-[14px] border border-black/5 bg-slate-50/90 text-slate-600"
+              onClick={() => setIsOpen((p) => !p)}
+            >
               <AnimatePresence mode="wait">
-                {isOpen
-                  ? <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><X size={20} /></motion.div>
-                  : <motion.div key="m" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><Menu size={20} /></motion.div>
-                }
+                {isOpen ? (
+                  <motion.div
+                    key="x"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <X size={20} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="m"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Menu size={20} />
+                  </motion.div>
+                )}
               </AnimatePresence>
             </motion.button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-40 md:hidden"
-              style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)" }}
+              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
             />
+
             <motion.div
-              initial={{ opacity: 0, x: "100%" }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: "100%" }}
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[300px] md:hidden flex flex-col overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 z-50 flex w-[300px] flex-col overflow-y-auto border-l border-black/5 bg-white/97 backdrop-blur-[32px] md:hidden"
               style={{
-                background: "rgba(255,255,255,0.97)", backdropFilter: "blur(32px)",
-                borderLeft: "1px solid rgba(0,0,0,0.07)", boxShadow: "-20px 0 60px rgba(0,0,0,0.12)",
+                boxShadow: "-20px 0 60px rgba(0,0,0,0.12)",
+                background: "rgba(255,255,255,0.97)",
               }}
             >
-              {/* Mobile header */}
-              <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
-                <span className="text-[16px] font-bold" style={{ color: "#111827" }}>
-                  Campus<span style={{ color: "#0d9488" }}>Hub</span>
+              <div className="flex items-center justify-between border-b border-black/5 p-5">
+                <span className="text-[16px] font-bold text-slate-900">
+                  Campus<span className="text-teal-600">Hub</span>
                 </span>
-                <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsOpen(false)} className="icon-btn" style={{ width: 36, height: 36 }}>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-black/5 bg-slate-50/90 text-slate-600"
+                >
                   <X size={18} />
                 </motion.button>
               </div>
 
-              {/* Search */}
-              <div className="p-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
-                <div className="search-bar" style={{ width: "100%" }}>
+              <div className="border-b border-black/5 p-4">
+                <div className="flex h-[42px] items-center gap-2 rounded-[14px] border border-black/10 bg-slate-50/95 px-4">
                   <Search size={15} color="#9ca3af" strokeWidth={2.2} />
-                  <input placeholder="Search items..." />
+                  <input
+                    placeholder="Search items..."
+                    className="w-full bg-transparent text-[13px] text-slate-700 outline-none placeholder:text-slate-400"
+                  />
                 </div>
               </div>
 
-              {/* Nav links */}
-              <div className="p-4 flex flex-col gap-2">
-                <p className="text-[10.5px] font-bold uppercase tracking-widest mb-1 pl-1" style={{ color: "#9ca3af" }}>
+              <div className="flex flex-col gap-2 p-4">
+                <p className="mb-1 pl-1 text-[10.5px] font-bold uppercase tracking-widest text-slate-400">
                   Navigation
                 </p>
-                {navLinks.map(({ to, label }, i) => (
-                  <motion.div key={to} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.05 }}>
-                    <Link to={to} onClick={() => setIsOpen(false)}
-                      className={`mobile-nav-item ${location.pathname === to ? "active" : ""}`}>
+                {/* FIX: Build mobile links list dynamically, including My Posts only when logged in */}
+                {[
+                  ...navLinks,
+                  ...(isLoggedIn ? [{ to: "/my-posts", label: "My Posts" }] : []),
+                ].map(({ to, label }, i) => (
+                  <motion.div
+                    key={to}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.05 }}
+                  >
+                    <Link
+                      to={to}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-3 rounded-[14px] border px-4 py-[13px] text-[14px] font-medium no-underline transition-all ${
+                        location.pathname === to
+                          ? "border-teal-500/20 bg-teal-500/10 text-teal-700"
+                          : "border-black/5 bg-slate-50/90 text-slate-700 hover:border-teal-500/20 hover:bg-teal-500/10 hover:text-teal-700"
+                      }`}
+                    >
                       {label}
                       {location.pathname === to && (
-                        <span style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: "#0d9488" }} />
+                        <span className="ml-auto h-1.5 w-1.5 rounded-full bg-teal-500" />
                       )}
                     </Link>
                   </motion.div>
                 ))}
               </div>
 
-              {/* Utility row */}
-              <div className="px-4 pb-4 flex gap-3">
-                <button className="flex-1 flex items-center justify-center gap-2 h-11 rounded-[13px] bg-gray-50 border border-gray-100 text-[13px] font-medium text-gray-600">
+              <div className="flex gap-3 px-4 pb-4">
+                <button className="flex h-11 flex-1 items-center justify-center gap-2 rounded-[13px] border border-gray-100 bg-gray-50 text-[13px] font-medium text-gray-600">
                   <Bell size={16} /> Alerts
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-500 text-white">2</span>
+                  <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    2
+                  </span>
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-2 h-11 rounded-[13px] bg-gray-50 border border-gray-100 text-[13px] font-medium text-gray-600">
+                <button className="flex h-11 flex-1 items-center justify-center gap-2 rounded-[13px] border border-gray-100 bg-gray-50 text-[13px] font-medium text-gray-600">
                   <ShoppingBag size={16} /> Cart
                 </button>
               </div>
 
-              {/* CTA */}
-              <div className="px-4 mt-auto mb-8">
-                <Link to={isLoggedIn ? "/profile" : "/login"} onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-2 text-[14px] font-bold text-white no-underline"
-                  style={{
-                    height: 48, borderRadius: 14,
-                    background: "linear-gradient(135deg, #0d9488, #0f766e)",
-                    boxShadow: "0 6px 20px rgba(13,148,136,0.3)",
-                  }}>
+              <div className="mt-auto mb-8 px-4">
+                <Link
+                  to={isLoggedIn ? "/profile" : "/login"}
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-12 items-center justify-center gap-2 rounded-[14px] bg-gradient-to-br from-teal-500 to-teal-700 text-[14px] font-bold text-white no-underline shadow-[0_6px_20px_rgba(13,148,136,0.3)]"
+                >
                   <UserCircle size={18} />
                   {isLoggedIn ? "My Profile" : "Sign In"}
                 </Link>

@@ -5,7 +5,7 @@ const itemSchema = new mongoose.Schema(
     title:{
         type: String,
         required: true,
-        enum: ["lost", "found", "sell", "buy"],
+        enum: ["lost", "found", "sell", "needs"],
         trim: true,
     },
     name: {
