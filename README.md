@@ -1,102 +1,362 @@
-# CampusHub — Full Stack MERN Campus Community
+# CampusHub
 
-CampusHub is a full-stack student portal for Lost & Found, Buy/Sell/Needs, clubs, campus events, discussions, notifications, profiles and real-time chat.
+CampusHub is a full-stack campus community platform built with the MERN stack. It helps students manage **lost & found items, marketplace listings, needs, discussions, real-time chat, notifications, and profiles** from one place.
 
-## Stack
-- Frontend: React + Vite + React Router + Axios + Lucide + Socket.IO client
-- Backend: Node.js + Express + MongoDB/Mongoose + JWT + cookies + Socket.IO
-- UI: responsive custom CSS, desktop sidebar + mobile bottom navigation
+## Features
 
-## Main pages
-- Home dashboard
-- Lost & Found / Marketplace browse
-- Item details
-- Create item/post
-- Login / Register
-- Profile + user posts
-- Clubs & Societies
-- Events
-- Discussions
-- Real-time chat
-- Notifications
-- Settings
+- User registration, login, logout, and protected routes
+- Lost, Found, Sell, and Needs item listings
+- Search, filtering, pagination, and item details
+- Create, edit, delete, and update item status
+- Image upload using Cloudinary
+- Save / unsave items
+- Student profile and profile editing
+- Campus discussions with likes and comments
+- Real-time one-to-one chat using Socket.IO
+- Notifications with read / read-all support
+- JWT-based authentication
+- Responsive React + Tailwind CSS interface
+- REST API built with Express and MongoDB
 
-## Project structure
-```
+## Tech Stack
+
+### Frontend
+
+- React 19
+- React Router
+- Tailwind CSS
+- Axios
+- Lucide React
+- Socket.IO Client
+- Vite
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JSON Web Token
+- bcryptjs
+- Socket.IO
+- Multer
+- Cloudinary
+- Cookie Parser
+- CORS
+- Morgan
+
+## Project Structure
+
+```text
 CampusHub/
 ├── backend/
-│   ├── config/db.js
-│   ├── middleware/auth.js
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
 │   ├── models/
-│   │   ├── User.js
-│   │   ├── Item.js
-│   │   ├── Discussion.js
-│   │   ├── Conversation.js
-│   │   ├── Message.js
-│   │   └── Notification.js
 │   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── itemRoutes.js
-│   │   ├── communityRoutes.js
-│   │   ├── chatRoutes.js
-│   │   ├── userRoutes.js
-│   │   └── notificationRoutes.js
-│   ├── utils/token.js
 │   ├── index.js
-│   ├── seed.js
-│   └── .env.example
-└── frontend/
-    ├── src/
-    │   ├── components/
-    │   ├── context/AuthContext.jsx
-    │   ├── pages/
-    │   ├── services/api.js
-    │   ├── styles/app.css
-    │   ├── App.jsx
-    │   └── main.jsx
-    ├── vite.config.js
-    └── .env.example
+│   └── package.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   └── services/
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── vercel.json
+│   └── package.json
+│
+└── README.md
 ```
 
-## Run locally
-### 1. Backend
+## Main Pages
+
+```text
+/
+├── /login
+├── /register
+├── /items
+├── /items/:id
+├── /items/:id/edit
+├── /create-item
+├── /discussions
+├── /chat
+├── /profile/:id
+├── /notifications
+└── /settings
+```
+
+## API Overview
+
+### Authentication
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+```
+
+### Items
+
+```http
+GET    /api/items
+GET    /api/items/:id
+POST   /api/items
+PUT    /api/items/:id
+PATCH  /api/items/:id/status
+DELETE /api/items/:id
+```
+
+### Users
+
+```http
+GET  /api/users/:id
+PUT  /api/users/me/profile
+POST /api/users/me/save/:itemId
+```
+
+### Chat
+
+```http
+GET  /api/chat/users
+GET  /api/chat/conversations
+POST /api/chat/conversations
+GET  /api/chat/conversations/:id/messages
+POST /api/chat/conversations/:id/messages
+```
+
+### Discussions and Community
+
+```http
+GET  /api/community/discussions
+POST /api/community/discussions
+POST /api/community/discussions/:id/like
+POST /api/community/discussions/:id/comments
+```
+
+The backend also currently contains API support for clubs and events.
+
+### Notifications
+
+```http
+GET   /api/notifications
+PATCH /api/notifications/read-all
+PATCH /api/notifications/:id/read
+```
+
+### Health Check
+
+```http
+GET /api/health
+```
+
+## Environment Variables
+
+Create a `.env` file inside the `backend` directory.
+
+```env
+PORT=3000
+
+MONGO_URI=your_mongodb_connection_string
+
+JWT_SECRET=your_jwt_secret
+
+CLIENT_URL=http://localhost:5173
+
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
+
+Create a `.env` file inside the `frontend` directory.
+
+```env
+VITE_API_URL=http://localhost:3000/api
+VITE_SOCKET_URL=http://localhost:3000
+```
+
+For production, replace localhost URLs with your deployed frontend and backend URLs.
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Gulzar-OP/CampusHub.git
+cd CampusHub
+```
+
+### 2. Install backend dependencies
+
 ```bash
 cd backend
-cp .env.example .env
 npm install
-npm run seed
-npm run dev
 ```
-Backend runs at `http://localhost:5000`.
 
-### 2. Frontend
+### 3. Install frontend dependencies
+
+Open another terminal:
+
 ```bash
 cd frontend
-cp .env.example .env
 npm install
+```
+
+## Run Locally
+
+### Start Backend
+
+```bash
+cd backend
 npm run dev
 ```
-Frontend runs at `http://localhost:5173`.
 
-## Demo account after seed
-- Email: `aarav@campus.edu`
-- Password: `password123`
+Backend runs by default at:
 
-## Important API routes
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-- `GET/POST /api/items`
-- `GET/PUT/DELETE /api/items/:id`
-- `GET /api/community/clubs`
-- `GET /api/community/events`
-- `GET/POST /api/community/discussions`
-- `GET/POST /api/chat/conversations`
-- `GET/POST /api/chat/conversations/:id/messages`
-- `GET /api/notifications`
-- `PUT /api/users/me/profile`
+```text
+http://localhost:3000
+```
 
-## Production notes
-For production, set real `MONGO_URI`, a strong `JWT_SECRET`, and exact `CLIENT_URL`. When frontend and backend are on different HTTPS domains, the auth cookie already uses `sameSite: none` + `secure: true` in production.
+API health check:
 
-Image posting currently accepts an image URL. If you want direct uploads, plug your existing Multer + Cloudinary middleware into `POST /api/items` and save `req.file.path` into `image`.
+```text
+http://localhost:3000/api/health
+```
+
+### Start Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Frontend runs at:
+
+```text
+http://localhost:5173
+```
+
+## Authentication Flow
+
+CampusHub supports JWT authentication.
+
+After login, authenticated requests can use the JWT token and protected backend routes verify the user before allowing access.
+
+The frontend Axios instance also sends credentials and attaches the stored token to requests:
+
+```text
+Authorization: Bearer <token>
+```
+
+## Image Upload
+
+Item images are uploaded through Multer and Cloudinary.
+
+Supported formats:
+
+- JPG
+- JPEG
+- PNG
+- WEBP
+
+Maximum upload size:
+
+```text
+5 MB
+```
+
+Images are stored under:
+
+```text
+campushub/items
+```
+
+## Real-Time Chat
+
+CampusHub uses Socket.IO for real-time communication.
+
+Users can:
+
+- Start conversations
+- Join conversation rooms
+- Send messages
+- Receive chat updates without refreshing the page
+
+## Deployment
+
+### Frontend
+
+The frontend can be deployed on Vercel.
+
+The included `vercel.json` provides SPA fallback support so React Router routes such as:
+
+```text
+/items
+/chat
+/settings
+/profile/:id
+```
+
+continue to work when directly opened or refreshed.
+
+### Backend
+
+The backend can be deployed on services such as Render.
+
+Set all backend environment variables in the deployment dashboard and configure:
+
+```env
+CLIENT_URL=https://your-production-frontend-domain.vercel.app
+```
+
+The frontend should use:
+
+```env
+VITE_API_URL=https://your-backend-domain/api
+VITE_SOCKET_URL=https://your-backend-domain
+```
+
+## Scripts
+
+### Backend
+
+```bash
+npm run dev
+npm start
+npm run seed
+```
+
+### Frontend
+
+```bash
+npm run dev
+npm run build
+npm run preview
+```
+
+## Future Improvements
+
+- Better real-time notification delivery
+- Advanced search and filters
+- Image optimization and moderation
+- Admin dashboard
+- Report inappropriate listings
+- Improved chat presence and typing indicators
+- Enhanced mobile UI
+- Email / OTP verification
+- Better marketplace transaction workflow
+
+## Author
+
+**Gulzar Hussain**
+
+GitHub: [Gulzar-OP](https://github.com/Gulzar-OP)
+
+## License
+
+This project is currently intended for educational and portfolio use.
