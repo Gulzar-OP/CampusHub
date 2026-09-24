@@ -37,7 +37,7 @@ const itemSchema = new mongoose.Schema(
     },
     claimedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       default: null,
     },
     views: { type: Number, default: 0 },
