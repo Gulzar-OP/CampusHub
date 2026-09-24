@@ -1,14 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
-import {
-  MapPin,
-  Eye,
-  MessageCircle,
-  ArrowLeft,
-  Package,
-} from "lucide-react";
+import { MapPin, Eye, MessageCircle, ArrowLeft, Package } from "lucide-react";
 
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -35,8 +28,7 @@ export default function ItemDetails() {
         console.error(error);
 
         setError(
-          error.response?.data?.message ||
-            "Failed to load item details.",
+          error.response?.data?.message || "Failed to load item details.",
         );
       } finally {
         setLoading(false);
@@ -58,9 +50,7 @@ export default function ItemDetails() {
         userId: item.postedBy._id,
       });
 
-      navigate(
-        `/chat?conversation=${res.data.conversation._id}`,
-      );
+      navigate(`/chat?conversation=${res.data.conversation._id}`);
     } catch (error) {
       console.error("Failed to create conversation:", error);
     }
@@ -108,14 +98,9 @@ export default function ItemDetails() {
   if (error || !item) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white px-6 text-center">
-        <Package
-          size={42}
-          className="mb-4 text-gray-300"
-        />
+        <Package size={42} className="mb-4 text-gray-300" />
 
-        <h2 className="text-xl font-bold text-gray-900">
-          Item not found
-        </h2>
+        <h2 className="text-xl font-bold text-gray-900">Item not found</h2>
 
         <p className="mt-2 text-sm text-gray-500">
           {error || "This item may no longer be available."}
@@ -147,50 +132,44 @@ export default function ItemDetails() {
       {/* ================= DETAILS ================= */}
 
       <div className="grid gap-8 lg:grid-cols-2">
-
         {/* ================= IMAGE ================= */}
 
         <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
-
           <div className="flex min-h-[350px] items-center justify-center bg-gray-100 sm:min-h-[450px] lg:h-full">
             {item.image ? (
-              <img
-                src={item.image}
-                alt={item.name}
-                className="h-full max-h-[600px] w-full object-cover"
-              />
+              <div className="w-full flex items-center justify-center bg-gray-50 rounded-2xl overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full max-h-[600px] object-contain"
+                />
+              </div>
             ) : (
               <div className="flex flex-col items-center gap-4 text-gray-400">
                 <span className="text-8xl">
                   {item.title === "sell"
                     ? "🛍️"
                     : item.title === "lost"
-                    ? "🔎"
-                    : item.title === "found"
-                    ? "✅"
-                    : "📦"}
+                      ? "🔎"
+                      : item.title === "found"
+                        ? "✅"
+                        : "📦"}
                 </span>
 
-                <p className="text-sm">
-                  No image available
-                </p>
+                <p className="text-sm">No image available</p>
               </div>
             )}
           </div>
-
         </div>
 
         {/* ================= INFO ================= */}
 
         <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-
           {/* Badge + Status */}
           <div className="mb-5 flex items-center justify-between gap-3">
-
             <span
               className={`rounded-full px-3 py-1.5 text-xs font-semibold capitalize ${
-                badgeStyle[item.title] ||
-                "bg-gray-100 text-gray-600"
+                badgeStyle[item.title] || "bg-gray-100 text-gray-600"
               }`}
             >
               {item.title}
@@ -198,13 +177,11 @@ export default function ItemDetails() {
 
             <span
               className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize ${
-                statusStyle[item.status] ||
-                "bg-gray-100 text-gray-600"
+                statusStyle[item.status] || "bg-gray-100 text-gray-600"
               }`}
             >
               {item.status}
             </span>
-
           </div>
 
           {/* Name */}
@@ -232,16 +209,13 @@ export default function ItemDetails() {
 
           {/* Info */}
           <div className="mt-7 space-y-4">
-
             <div className="flex items-center gap-3 text-sm text-gray-600">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
                 <MapPin size={17} />
               </div>
 
               <div>
-                <p className="text-xs text-gray-400">
-                  Location
-                </p>
+                <p className="text-xs text-gray-400">Location</p>
 
                 <p className="font-medium text-gray-700">
                   {item.location || "Campus"}
@@ -255,16 +229,13 @@ export default function ItemDetails() {
               </div>
 
               <div>
-                <p className="text-xs text-gray-400">
-                  Views
-                </p>
+                <p className="text-xs text-gray-400">Views</p>
 
                 <p className="font-medium text-gray-700">
                   {item.views || 0} views
                 </p>
               </div>
             </div>
-
           </div>
 
           {/* Divider */}
@@ -288,7 +259,6 @@ export default function ItemDetails() {
 
               {/* Owner details */}
               <div className="min-w-0">
-
                 <p className="truncate font-semibold text-gray-900 transition group-hover:text-indigo-600">
                   {item.postedBy?.name || "Unknown User"}
                 </p>
@@ -296,12 +266,9 @@ export default function ItemDetails() {
                 <p className="mt-1 truncate text-sm text-gray-500">
                   {item.postedBy?.course || "Student"}
 
-                  {item.postedBy?.year &&
-                    ` · ${item.postedBy.year}`}
+                  {item.postedBy?.year && ` · ${item.postedBy.year}`}
                 </p>
-
               </div>
-
             </Link>
           </div>
 
@@ -323,11 +290,8 @@ export default function ItemDetails() {
               This item was posted by you.
             </div>
           )}
-
         </div>
-
       </div>
     </div>
   );
 }
-

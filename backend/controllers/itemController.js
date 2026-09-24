@@ -93,11 +93,10 @@ export const getItems = async (req, res) => {
       ),
     });
   } catch (error) {
-    console.error("Get items error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: `Internal server error: , ${error.message}`,
     });
   }
 };
@@ -137,11 +136,10 @@ export const getItemById = async (req, res) => {
       item,
     });
   } catch (error) {
-    console.error("Get item error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: `Internal server error : ${error.message}`,
     });
   }
 };
@@ -149,8 +147,6 @@ export const getItemById = async (req, res) => {
 // ================= CREATE ITEM =================
 export const createItem = async (req, res) => {
   try {
-    console.log("CREATE BODY:", req.body);
-    console.log("CREATE FILE:", req.file);
 
     const {
       title,
@@ -209,7 +205,6 @@ export const createItem = async (req, res) => {
       item,
     });
   } catch (error) {
-    console.error("Create item error:", error);
 
     return res.status(400).json({
       success: false,
@@ -223,8 +218,6 @@ export const createItem = async (req, res) => {
 // ================= UPDATE ITEM =================
 export const updateItem = async (req, res) => {
   try {
-    console.log("UPDATE BODY:", req.body);
-    console.log("UPDATE FILE:", req.file);
 
     const item = await Item.findById(
       req.params.id,
@@ -300,8 +293,6 @@ export const updateItem = async (req, res) => {
     }
 
     // ================= NEW IMAGE =================
-
-    // User ne new image choose ki hai tabhi old URL replace hoga
     if (req.file) {
       item.image = req.file.path;
     }
@@ -319,13 +310,11 @@ export const updateItem = async (req, res) => {
       item,
     });
   } catch (error) {
-    console.error("Update item error:", error);
 
     return res.status(500).json({
       success: false,
       message:
-        error.message ||
-        "Internal server error",
+        error.message
     });
   }
 };
@@ -392,14 +381,10 @@ export const updateItemStatus = async (
       item,
     });
   } catch (error) {
-    console.error(
-      "Update item status error:",
-      error,
-    );
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: error.message,
     });
   }
 };
@@ -437,11 +422,10 @@ export const deleteItem = async (req, res) => {
       message: "Item deleted",
     });
   } catch (error) {
-    console.error("Delete item error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: `Delete item error : ${error.message}`,
     });
   }
 };
